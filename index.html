@@ -1,0 +1,653 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Aayush's Mahadev Birthday</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Marcellus&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout concept: one 3D Kailash scene (mountains, moon, trishul and Ganga on separate depth planes that tilt with the pointer),
+   followed by tilting glass panels: countdown, a rotating ring of 15 rudraksha beads (one wish per year), and a third eye. */
+:root {
+  --night: #060a15;
+  --kailash: #0d1730;
+  --ash: #cfd8ea;
+  --ganga: #62cbe6;
+  --moon: #f3ecd6;
+  --eye: #ff7b3d;
+  --muted: #92a0bf;
+  --glass-edge: rgba(190, 210, 255, 0.22);
+  --font-display: 'Yatra One', 'Marcellus', Georgia, serif;
+  --font-head: 'Marcellus', Georgia, serif;
+  --font-body: 'Hind', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--night);
+  background-image: linear-gradient(180deg, var(--night) 0%, var(--kailash) 55%, #0a1226 100%);
+  background-attachment: fixed;
+  color: var(--ash);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 18px 40px;
+  overflow-x: hidden;
+}
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.page { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; display: grid; gap: 28px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--ganga); outline-offset: 3px; }
+
+.topbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.om { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.04em; color: var(--moon); }
+.chip { font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; border: 1px solid var(--glass-edge); border-radius: 999px; padding: 4px 14px; color: var(--ash); }
+
+/* glass */
+.glass {
+  position: relative;
+  background: linear-gradient(160deg, rgba(190, 210, 255, 0.14), rgba(190, 210, 255, 0.05));
+  border: 1px solid var(--glass-edge);
+  border-radius: 20px;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+.glass::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(280px circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, 0.1), transparent 62%);
+}
+[data-tilt] { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.2s ease-out; }
+
+/* HERO SCENE */
+.hero {
+  position: relative; overflow: hidden; border-radius: 26px;
+  perspective: 1100px; perspective-origin: 50% 42%;
+  background:
+    radial-gradient(ellipse 70% 38% at 50% 88%, rgba(98, 203, 230, 0.28), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 78% 10%, rgba(243, 236, 214, 0.1), transparent 70%),
+    linear-gradient(180deg, #050912 0%, #0a1530 58%, #12284a 100%);
+  border: 1px solid var(--glass-edge);
+}
+.stage { position: relative; height: 560px; transform-style: preserve-3d; will-change: transform; }
+.layer { position: absolute; inset: 0; pointer-events: none; }
+.l-mtn-back { transform: translateZ(-220px) scale(1.2); }
+.l-moon { transform: translateZ(-140px) scale(1.127); }
+.l-mtn-mid { transform: translateZ(-100px) scale(1.09); }
+.l-trishul { transform: translateZ(-30px) scale(1.03); }
+.l-ganga { transform: translateZ(20px) scale(0.982); }
+.layer svg.range { position: absolute; left: 0; bottom: -2%; width: 100%; height: 60%; }
+.moon {
+  position: absolute; top: 9%; right: 13%; width: 78px; height: 78px; border-radius: 50%;
+  box-shadow: -22px 8px 0 0 var(--moon);
+  filter: drop-shadow(0 0 18px rgba(243, 236, 214, 0.55));
+}
+.trishul {
+  position: absolute; left: 50%; top: 3%; height: 76%; aspect-ratio: 200 / 420; transform: translateX(-50%);
+  color: var(--ash); filter: drop-shadow(0 0 14px rgba(98, 203, 230, 0.5));
+}
+.waves { position: absolute; left: 0; bottom: 0; width: 200%; height: 70px; animation: flow 16s linear infinite; }
+.waves.w2 { bottom: -8px; height: 60px; animation-duration: 24s; animation-direction: reverse; }
+@keyframes flow { to { transform: translateX(-50%); } }
+
+.hero .title-panel {
+  position: absolute; left: 50%; bottom: 7%; width: min(92%, 760px);
+  transform: translateX(-50%) translateZ(70px);
+  padding: 22px clamp(16px, 4vw, 40px) 24px; text-align: center;
+  background: linear-gradient(160deg, rgba(20, 34, 66, 0.72), rgba(12, 22, 46, 0.55));
+}
+.eyebrow { font-family: var(--font-display); font-size: 1.1rem; color: var(--eye); letter-spacing: 0.06em; margin: 0 0 4px; }
+h1 { font-family: var(--font-display); font-weight: 400; margin: 0; font-size: clamp(2rem, 7vw, 4rem); line-height: 1.08; color: var(--moon); text-wrap: balance; }
+h1 .name { display: inline-block; color: #fff; text-shadow: 0 0 28px rgba(98, 203, 230, 0.7); }
+.sub { margin: 12px auto 0; max-width: 46ch; color: var(--ash); font-size: 1.02rem; }
+
+/* sections */
+.section-head { display: grid; gap: 4px; margin-bottom: 4px; }
+.label { font-family: var(--font-head); font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ganga); margin: 0; }
+h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.5rem, 4.6vw, 2.2rem); line-height: 1.15; margin: 0; color: var(--moon); text-wrap: balance; }
+.panel { padding: clamp(18px, 3.4vw, 32px); }
+
+/* countdown */
+.countdown { display: grid; gap: 18px; }
+.cd-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.cd-cell { text-align: center; padding: 14px 4px 10px; border-radius: 14px; background: rgba(6, 10, 21, 0.45); border: 1px solid rgba(190, 210, 255, 0.14); min-width: 0; }
+.cd-num { display: block; font-family: var(--font-head); font-size: clamp(1.8rem, 7vw, 3.2rem); line-height: 1.1; color: var(--moon); font-variant-numeric: tabular-nums; }
+.cd-unit { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.cd-msg { font-family: var(--font-display); font-size: clamp(1.4rem, 5vw, 2.2rem); color: var(--eye); margin: 0; text-align: center; padding: 8px 0; }
+
+/* mala */
+.mala { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; align-items: center; }
+.mala > * { min-width: 0; }
+.ring-scene { position: relative; height: 300px; perspective: 900px; overflow: clip; }
+.ring-om { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-size: 3.4rem; color: var(--moon); opacity: 0.22; text-shadow: 0 0 24px var(--ganga); pointer-events: none; }
+.ring { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; transform: rotateX(-14deg) rotateY(var(--spin, 0deg)); transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.thread { position: absolute; width: calc(var(--R) * 2); height: calc(var(--R) * 2); left: calc(var(--R) * -1); top: calc(var(--R) * -1); border-radius: 50%; border: 1px solid rgba(207, 216, 234, 0.3); transform: rotateX(90deg); }
+.bead {
+  position: absolute; width: 46px; height: 46px; left: -23px; top: -23px; border: 0; padding: 0; border-radius: 50%;
+  transform: rotateY(calc(var(--i) * 24deg)) translateZ(var(--R));
+  background: radial-gradient(circle at 34% 28%, #d99a5a 0, #8a5024 45%, #3d1e0c 100%);
+  box-shadow: inset -4px -6px 10px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: opacity 1s, box-shadow 0.4s;
+}
+.bead::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: repeating-conic-gradient(rgba(0, 0, 0, 0.35) 0 3deg, transparent 3deg 45deg); opacity: 0.55; }
+.bead span { position: relative; font-family: var(--font-head); font-size: 0.95rem; color: var(--moon); text-shadow: 0 1px 2px #000; }
+.bead.back span { opacity: 0; }
+.bead.on { box-shadow: 0 0 0 2px var(--eye), 0 0 24px var(--eye), inset -4px -6px 10px rgba(0, 0, 0, 0.5); }
+.wish { padding: clamp(18px, 3vw, 28px); display: grid; gap: 8px; }
+.wish-count { margin: 0; font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ganga); }
+.wish-hi { font-family: var(--font-display); font-size: clamp(2rem, 7vw, 3rem); line-height: 1.1; color: var(--moon); margin: 0; }
+.wish-en { font-family: var(--font-head); font-size: 1.1rem; margin: 0; color: var(--eye); }
+.wish-text { margin: 4px 0 0; font-size: 1.08rem; max-width: 40ch; }
+.wish-body.swap { animation: swap 0.6s ease; }
+@keyframes swap { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.nav { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.btn { border: 1px solid var(--glass-edge); background: rgba(190, 210, 255, 0.08); border-radius: 999px; padding: 8px 20px; font-family: var(--font-head); letter-spacing: 0.06em; transition: background 0.2s, border-color 0.2s; }
+.btn:hover { background: rgba(190, 210, 255, 0.18); border-color: var(--ganga); }
+.btn.primary { background: linear-gradient(135deg, var(--eye), #d9481f); border-color: transparent; color: #1a0a04; font-weight: 600; }
+.btn.primary:hover { filter: brightness(1.1); }
+
+/* third eye */
+.eye-sec { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: center; }
+.eye-sec > * { min-width: 0; }
+#eyeSvg { width: 100%; max-width: 360px; margin: 0 auto; display: block; overflow: visible; }
+#eyeSvg .tilak path { stroke: var(--ash); stroke-width: 5; stroke-linecap: round; fill: none; opacity: 0.85; }
+#eyeSvg .lid { stroke: var(--ash); stroke-width: 4; stroke-linecap: round; fill: none; transition: opacity 0.4s; }
+#eyeSvg .open-eye { transform-origin: 120px 105px; transform: scaleY(0); transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+#eyeSvg.open .open-eye { transform: scaleY(1); }
+#eyeSvg.open .lid { opacity: 0; }
+#eyeSvg .glow { opacity: 0; transition: opacity 0.8s; }
+#eyeSvg.open .glow { opacity: 1; animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.55; } }
+.eye-msg { font-size: 1.15rem; min-height: 4.8em; margin: 10px 0 14px; max-width: 38ch; }
+.btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn.ringing { animation: shake 0.9s ease; }
+@keyframes shake { 10%, 50%, 90% { transform: rotate(-4deg); } 30%, 70% { transform: rotate(4deg); } }
+
+.foot { text-align: center; padding: 18px 0 8px; display: grid; gap: 4px; }
+.foot .hh { font-family: var(--font-display); font-size: 1.7rem; color: var(--moon); margin: 0; }
+.foot p { margin: 0; color: var(--muted); }
+
+/* lock gate */
+html.locked { overflow: hidden; }
+.lock {
+  position: fixed; inset: 0; z-index: 50; display: flex; overflow-y: auto;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background:
+    radial-gradient(ellipse 80% 45% at 50% 100%, rgba(98, 203, 230, 0.26), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 8%, rgba(243, 236, 214, 0.1), transparent 70%),
+    linear-gradient(180deg, #050912, #0a1530 68%, #12284a);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.lock.open { opacity: 0; transform: scale(1.08); pointer-events: none; }
+.lock-card { width: min(100%, 400px); margin: auto; padding: 24px 20px 22px; text-align: center; display: grid; gap: 12px; }
+.lock-card .eyebrow { margin: 0; }
+.lock-card h2 { font-size: clamp(1.7rem, 8vw, 2.3rem); }
+.lock-sub { margin: 0; color: var(--muted); font-size: 0.95rem; }
+.lock .cd-num { font-size: clamp(1.5rem, 8vw, 2.1rem); }
+.lock .cd-cell { padding: 10px 2px 8px; }
+.lock-note { margin: 0; font-family: var(--font-display); color: var(--eye); font-size: 1.15rem; }
+.lock-note:empty { display: none; }
+.pin { display: flex; justify-content: center; gap: 14px; padding-top: 4px; }
+.pin i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ash); transition: background 0.15s, box-shadow 0.15s; }
+.pin i.on { background: var(--eye); border-color: var(--eye); box-shadow: 0 0 12px var(--eye); }
+.lock-msg { margin: 0; min-height: 1.5em; font-size: 0.95rem; color: var(--ash); }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.key {
+  height: 50px; border-radius: 14px; border: 1px solid var(--glass-edge); background: rgba(190, 210, 255, 0.08);
+  font-family: var(--font-head); font-size: 1.4rem; color: var(--moon); transition: background 0.15s, transform 0.1s;
+}
+.key.sm { font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.key:hover { background: rgba(190, 210, 255, 0.18); }
+.key:active { transform: scale(0.95); }
+.lock-card.shake { animation: lockshake 0.45s ease; }
+@keyframes lockshake { 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+
+@media (max-width: 520px) {
+  .stage { height: 540px; }
+  .moon { width: 60px; height: 60px; box-shadow: -17px 6px 0 0 var(--moon); right: 8%; }
+  .hero .title-panel { bottom: 5%; }
+  .sub { font-size: 0.95rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::after, *::before { animation: none !important; transition-duration: 0.01s !important; }
+}
+</style>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<div class="lock" id="lock" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+  <div class="glass lock-card" id="lockCard">
+    <p class="eyebrow">ॐ नमः शिवाय</p>
+    <h2 id="lockTitle">The gate is locked</h2>
+    <p class="lock-sub">Aayush's birthday page opens with a 4-digit passcode. Until his big day, this is the time left.</p>
+    <div class="cd-grid" id="lkGrid">
+      <div class="cd-cell"><span class="cd-num" id="lkD">--</span><span class="cd-unit">Days</span></div>
+      <div class="cd-cell"><span class="cd-num" id="lkH">--</span><span class="cd-unit">Hours</span></div>
+      <div class="cd-cell"><span class="cd-num" id="lkM">--</span><span class="cd-unit">Minutes</span></div>
+      <div class="cd-cell"><span class="cd-num" id="lkS">--</span><span class="cd-unit">Seconds</span></div>
+    </div>
+    <p class="lock-note" id="lkNote"></p>
+    <div class="pin" id="pinDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <p class="lock-msg" id="lockMsg" role="status">Enter the passcode</p>
+    <div class="keypad">
+      <button class="key" type="button" data-k="1">1</button>
+      <button class="key" type="button" data-k="2">2</button>
+      <button class="key" type="button" data-k="3">3</button>
+      <button class="key" type="button" data-k="4">4</button>
+      <button class="key" type="button" data-k="5">5</button>
+      <button class="key" type="button" data-k="6">6</button>
+      <button class="key" type="button" data-k="7">7</button>
+      <button class="key" type="button" data-k="8">8</button>
+      <button class="key" type="button" data-k="9">9</button>
+      <button class="key sm" type="button" data-act="clear">Clear</button>
+      <button class="key" type="button" data-k="0">0</button>
+      <button class="key sm" type="button" data-act="back" aria-label="Delete last digit">Del</button>
+    </div>
+  </div>
+</div>
+
+<main class="page" id="page" inert aria-hidden="true">
+  <header class="topbar">
+    <span class="om">ॐ नमः शिवाय</span>
+    <span class="chip">27 November · Turning 15</span>
+  </header>
+
+  <section class="hero" id="hero" aria-label="Birthday greeting for Aayush">
+    <div class="stage" id="stage">
+      <div class="layer l-mtn-back">
+        <svg class="range" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <defs>
+            <linearGradient id="gBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a4272"/><stop offset="1" stop-color="#101d3a"/></linearGradient>
+            <linearGradient id="gMid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14264a"/><stop offset="1" stop-color="#08101f"/></linearGradient>
+          </defs>
+          <polygon fill="url(#gBack)" points="0,420 0,250 90,210 170,240 280,130 360,200 430,160 520,240 640,110 740,210 820,170 920,250 1020,150 1100,220 1200,180 1200,420"/>
+          <g fill="rgba(226,236,255,0.62)">
+            <polygon points="280,130 238,172 262,165 278,185 296,168 335,178"/>
+            <polygon points="640,110 593,163 615,157 634,180 655,159 678,171 701,171"/>
+            <polygon points="1020,150 980,190 1000,184 1018,204 1036,186 1066,190"/>
+          </g>
+        </svg>
+      </div>
+      <div class="layer l-moon"><div class="moon"></div></div>
+      <div class="layer l-mtn-mid">
+        <svg class="range" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <polygon fill="url(#gMid)" points="0,420 0,310 120,270 230,320 340,260 450,330 560,290 680,340 790,280 900,330 1010,285 1120,325 1200,300 1200,420"/>
+        </svg>
+      </div>
+      <div class="layer l-trishul">
+        <svg class="trishul" viewBox="0 0 200 420" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M100 118 V412" stroke-width="5"/>
+          <path d="M100 8 L114 64 L100 112 L86 64 Z" fill="currentColor" stroke-width="2"/>
+          <path d="M100 124 C58 124 44 100 44 64" stroke-width="5"/>
+          <path d="M44 38 L55 70 L33 70 Z" fill="currentColor" stroke-width="2"/>
+          <path d="M100 124 C142 124 156 100 156 64" stroke-width="5"/>
+          <path d="M156 38 L167 70 L145 70 Z" fill="currentColor" stroke-width="2"/>
+          <path d="M82 130 H118" stroke-width="5"/>
+          <path d="M76 152 L124 152 L100 180 Z M76 208 L124 208 L100 180 Z" stroke-width="3"/>
+          <path d="M76 152 Q52 180 76 208 M124 152 Q148 180 124 208" stroke-width="2" opacity="0.7"/>
+          <path d="M100 180 Q158 172 166 214 T134 262" stroke="#62cbe6" stroke-width="2.5"/>
+        </svg>
+      </div>
+      <div class="layer l-ganga" aria-hidden="true">
+        <svg class="waves w2" viewBox="0 0 2400 60" preserveAspectRatio="none"><path fill="rgba(98,203,230,0.14)" d="M0 30 Q150 0 300 30 T600 30 T900 30 T1200 30 T1500 30 T1800 30 T2100 30 T2400 30 V60 H0Z"/></svg>
+        <svg class="waves" viewBox="0 0 2400 60" preserveAspectRatio="none"><path fill="rgba(98,203,230,0.2)" d="M0 30 Q150 0 300 30 T600 30 T900 30 T1200 30 T1500 30 T1800 30 T2100 30 T2400 30 V60 H0Z"/></svg>
+      </div>
+
+      <div class="glass title-panel">
+        <p class="eyebrow">हर हर महादेव</p>
+        <h1>Happy 15th Birthday, <span class="name">Aayush</span></h1>
+        <p class="sub">On 27 November you turn 15. May Mahadev's blessings walk beside you all year.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="glass panel countdown" data-tilt aria-label="Countdown to birthday">
+    <div class="section-head">
+      <p class="label">The day is coming</p>
+      <h2 id="cdTitle">Until Aayush turns 15</h2>
+    </div>
+    <div class="cd-grid" id="cdGrid">
+      <div class="cd-cell"><span class="cd-num" id="cdD">--</span><span class="cd-unit">Days</span></div>
+      <div class="cd-cell"><span class="cd-num" id="cdH">--</span><span class="cd-unit">Hours</span></div>
+      <div class="cd-cell"><span class="cd-num" id="cdM">--</span><span class="cd-unit">Minutes</span></div>
+      <div class="cd-cell"><span class="cd-num" id="cdS">--</span><span class="cd-unit">Seconds</span></div>
+    </div>
+    <p class="cd-msg" id="cdMsg" hidden></p>
+  </section>
+
+  <section aria-label="Fifteen wishes">
+    <div class="section-head" style="margin-bottom:14px">
+      <p class="label">15 beads, 15 years</p>
+      <h2>One rudraksha for every year</h2>
+    </div>
+    <div class="mala">
+      <div class="ring-scene" id="ringScene">
+        <div class="ring-om" aria-hidden="true">ॐ</div>
+        <div class="ring" id="ring"><div class="thread"></div></div>
+      </div>
+      <div class="glass wish" data-tilt id="wishPanel" aria-live="polite">
+        <p class="wish-count" id="wishCount"></p>
+        <div class="wish-body" id="wishBody">
+          <p class="wish-hi" id="wishHi"></p>
+          <p class="wish-en" id="wishEn"></p>
+          <p class="wish-text" id="wishText"></p>
+        </div>
+        <div class="nav">
+          <button class="btn" id="prev" type="button">Previous</button>
+          <button class="btn" id="next" type="button">Next wish</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="glass panel eye-sec" data-tilt aria-label="Third eye blessing">
+    <svg id="eyeSvg" viewBox="0 0 240 180" role="img" aria-label="Shiva's third eye, closed">
+      <defs>
+        <clipPath id="eyeClip"><path d="M40 105 Q120 45 200 105 Q120 165 40 105 Z"/></clipPath>
+        <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ff7b3d" stop-opacity="0.55"/><stop offset="1" stop-color="#ff7b3d" stop-opacity="0"/></radialGradient>
+      </defs>
+      <circle class="glow" cx="120" cy="105" r="95" fill="url(#eyeGlow)"/>
+      <g class="tilak"><path d="M52 18 Q120 6 188 18"/><path d="M58 34 Q120 22 182 34"/><path d="M64 50 Q120 38 176 50"/></g>
+      <path class="lid" d="M40 105 Q120 125 200 105"/>
+      <g class="open-eye">
+        <path d="M40 105 Q120 45 200 105 Q120 165 40 105 Z" fill="#1a0a06" stroke="var(--ash)" stroke-width="4" stroke-linejoin="round"/>
+        <g clip-path="url(#eyeClip)">
+          <path d="M120 62 C140 88 146 106 120 150 C94 106 100 88 120 62 Z" fill="#ff7b3d"/>
+          <path d="M120 82 C130 98 132 108 120 130 C108 108 110 98 120 82 Z" fill="#ffd27a"/>
+        </g>
+      </g>
+    </svg>
+    <div>
+      <p class="label">Mahadev's message</p>
+      <h2>Open the third eye</h2>
+      <p class="eye-msg" id="eyeMsg">Tap the button. Mahadev has something to tell Aayush.</p>
+      <div class="btns">
+        <button class="btn primary" id="eyeBtn" type="button">Open the third eye</button>
+        <button class="btn" id="damruBtn" type="button">Ring the damru</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p class="hh">हर हर महादेव</p>
+    <p>Made for Aayush, 27 November. From your friend, with love.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function mod(a, m) { return ((a % m) + m) % m; }
+
+  /* ---------- sky canvas: stars, drifting ash, ember bursts ---------- */
+  var cv = document.getElementById('sky'), cx = cv.getContext('2d');
+  var W = 0, H = 0, DPR = 1, stars = [], motes = [], sparks = [];
+  function sizeSky() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * DPR; cv.height = H * DPR;
+    cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    stars = []; motes = [];
+    var ns = Math.round(W * H / 9000);
+    for (var i = 0; i < ns; i++) stars.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.3 + 0.2, p: Math.random() * 6.28, s: Math.random() * 1.2 + 0.4 });
+    for (var j = 0; j < 36; j++) motes.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.6 + 0.6, v: Math.random() * 0.25 + 0.08, d: Math.random() * 6.28 });
+    if (reduce) drawSky(0);
+  }
+  function drawSky(t) {
+    cx.clearRect(0, 0, W, H);
+    var i, s, m, p;
+    for (i = 0; i < stars.length; i++) {
+      s = stars[i];
+      cx.globalAlpha = 0.35 + 0.6 * (0.5 + 0.5 * Math.sin(t / 900 * s.s + s.p));
+      cx.fillStyle = '#dfe8ff';
+      cx.beginPath(); cx.arc(s.x, s.y, s.r, 0, 6.283); cx.fill();
+    }
+    for (i = 0; i < motes.length; i++) {
+      m = motes[i];
+      if (!reduce) { m.y += m.v; m.x += Math.sin(t / 2000 + m.d) * 0.2; if (m.y > H + 4) { m.y = -4; m.x = Math.random() * W; } }
+      cx.globalAlpha = 0.18; cx.fillStyle = '#cfd8ea';
+      cx.beginPath(); cx.arc(m.x, m.y, m.r, 0, 6.283); cx.fill();
+    }
+    for (i = sparks.length - 1; i >= 0; i--) {
+      p = sparks[i];
+      p.x += p.vx; p.y += p.vy; p.vy -= 0.012; p.vx *= 0.99; p.life -= 0.012;
+      if (p.life <= 0) { sparks.splice(i, 1); continue; }
+      cx.globalAlpha = Math.max(0, p.life);
+      cx.fillStyle = p.c;
+      cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.283); cx.fill();
+    }
+    cx.globalAlpha = 1;
+  }
+  function loop(t) {
+    if (!document.hidden) drawSky(t);
+    requestAnimationFrame(loop);
+  }
+  function burst(x, y) {
+    if (reduce) return;
+    var cols = ['#ff7b3d', '#ffb15c', '#ffd27a', '#62cbe6'];
+    for (var i = 0; i < 90; i++) {
+      var a = Math.random() * 6.283, sp = Math.random() * 3.4 + 0.6;
+      sparks.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 0.6, r: Math.random() * 2.2 + 0.6, life: 1 + Math.random() * 0.8, c: cols[(Math.random() * cols.length) | 0] });
+    }
+  }
+  window.addEventListener('resize', sizeSky);
+  sizeSky();
+  if (!reduce) requestAnimationFrame(loop);
+
+  /* ---------- hero parallax ---------- */
+  var hero = document.getElementById('hero'), stage = document.getElementById('stage');
+  var tx = 0, ty = 0, px = 0, py = 0, hovering = false;
+  hero.addEventListener('pointermove', function (e) {
+    var r = stage.getBoundingClientRect();
+    tx = (e.clientX - r.left) / r.width - 0.5; ty = (e.clientY - r.top) / r.height - 0.5; hovering = true;
+  });
+  hero.addEventListener('pointerleave', function () { hovering = false; });
+  if (!reduce) {
+    (function sway(t) {
+      if (!hovering) { tx = Math.sin(t / 3200) * 0.35; ty = Math.cos(t / 4100) * 0.25; }
+      px += (tx - px) * 0.06; py += (ty - py) * 0.06;
+      stage.style.transform = 'rotateY(' + (px * 12).toFixed(2) + 'deg) rotateX(' + (-py * 9).toFixed(2) + 'deg)';
+      requestAnimationFrame(sway);
+    })(0);
+  }
+
+  /* ---------- glass tilt ---------- */
+  if (!reduce) {
+    document.querySelectorAll('[data-tilt]').forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        el.style.setProperty('--ry', ((x - 0.5) * 8).toFixed(2) + 'deg');
+        el.style.setProperty('--rx', ((0.5 - y) * 6).toFixed(2) + 'deg');
+        el.style.setProperty('--gx', (x * 100).toFixed(1) + '%');
+        el.style.setProperty('--gy', (y * 100).toFixed(1) + '%');
+      });
+      el.addEventListener('pointerleave', function () { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
+    });
+  }
+
+  /* ---------- countdown (IST) ---------- */
+  var target = new Date('2026-11-27T00:00:00+05:30').getTime(), DAY = 864e5;
+  var cdGrid = document.getElementById('cdGrid'), cdMsg = document.getElementById('cdMsg'), cdTitle = document.getElementById('cdTitle');
+  var el = { d: document.getElementById('cdD'), h: document.getElementById('cdH'), m: document.getElementById('cdM'), s: document.getElementById('cdS') };
+  var lk = { d: document.getElementById('lkD'), h: document.getElementById('lkH'), m: document.getElementById('lkM'), s: document.getElementById('lkS') };
+  var lkGrid = document.getElementById('lkGrid'), lkNote = document.getElementById('lkNote');
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function tickCountdown() {
+    var now = Date.now(), diff = target - now;
+    if (diff > 0) {
+      var s = Math.floor(diff / 1000);
+      el.d.textContent = Math.floor(s / 86400);
+      el.h.textContent = pad(Math.floor(s % 86400 / 3600));
+      el.m.textContent = pad(Math.floor(s % 3600 / 60));
+      el.s.textContent = pad(s % 60);
+      lk.d.textContent = el.d.textContent; lk.h.textContent = el.h.textContent; lk.m.textContent = el.m.textContent; lk.s.textContent = el.s.textContent;
+    } else if (now < target + DAY) {
+      cdGrid.hidden = true; cdMsg.hidden = false; cdTitle.textContent = 'Today is the day';
+      cdMsg.textContent = 'Happy birthday, Aayush! You are 15 today.';
+      lkGrid.hidden = true; lkNote.textContent = "Today is Aayush's birthday!";
+    } else {
+      cdGrid.hidden = true; cdMsg.hidden = false; cdTitle.textContent = 'Aayush turned 15';
+      cdMsg.textContent = 'It happened on 27 November. Har Har Mahadev!';
+      lkGrid.hidden = true; lkNote.textContent = 'Aayush turned 15 on 27 November.';
+    }
+  }
+  tickCountdown(); setInterval(tickCountdown, 1000);
+
+  /* ---------- rudraksha ring ---------- */
+  var WISHES = [
+    { hi: 'शक्ति', en: 'Shakti, strength', t: 'Strength to stand up for what is right, even when it is the harder thing to do.' },
+    { hi: 'शांति', en: 'Shanti, calm', t: 'Calm like Kailash. Let exams, noise and drama drift past like clouds.' },
+    { hi: 'ज्ञान', en: 'Gyaan, wisdom', t: "Clear eyes, like the third eye. May you see what matters and ignore what doesn't." },
+    { hi: 'मित्रता', en: 'Mitrata, friendship', t: 'Friends who stay on the good days and the bad ones. I plan to be one of them.' },
+    { hi: 'साहस', en: 'Sahas, courage', t: 'Courage to try the thing you are not sure about yet.' },
+    { hi: 'हास्य', en: 'Hasya, laughter', t: 'Laughter loud enough to wake up the whole mountain.' },
+    { hi: 'तेज', en: 'Tej, energy', t: 'Tandav-level energy, on the field, in class and everywhere else.' },
+    { hi: 'धैर्य', en: 'Dhairya, patience', t: 'Patience for the things that take time. Good things usually do.' },
+    { hi: 'विवेक', en: 'Vivek, judgement', t: 'Good judgement in the big decisions and in the small ones.' },
+    { hi: 'संगीत', en: 'Sangeet, rhythm', t: 'The beat of the damru in everything you love doing.' },
+    { hi: 'सेवा', en: 'Seva, kindness', t: 'Kindness to people who can never pay you back.' },
+    { hi: 'स्वतंत्रता', en: 'Swatantrata, freedom', t: 'Freedom to be exactly who you are. No costume needed.' },
+    { hi: 'लक्ष्य', en: 'Lakshya, purpose', t: 'A goal that pulls you forward every morning.' },
+    { hi: 'आरोग्य', en: 'Aarogya, health', t: 'Good health, good food and enough sleep. Yes, sleep counts.' },
+    { hi: 'आनंद', en: 'Ananda, joy', t: 'Bholenath loves a simple heart. May yours stay light and happy.' }
+  ];
+  var N = WISHES.length, STEP = 360 / N;
+  var ring = document.getElementById('ring'), scene = document.getElementById('ringScene');
+  var wBody = document.getElementById('wishBody');
+  var beads = [], n = 0, lastTouch = 0, hoverPause = false;
+
+  WISHES.forEach(function (w, i) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'bead';
+    b.style.setProperty('--i', i);
+    b.setAttribute('aria-label', 'Wish ' + (i + 1) + ': ' + w.en);
+    b.innerHTML = '<span>' + (i + 1) + '</span>';
+    b.addEventListener('click', function () { goTo(i); lastTouch = Date.now(); });
+    ring.appendChild(b); beads.push(b);
+  });
+  function setRadius() {
+    var w = scene.clientWidth, R = Math.max(90, Math.min(170, (w - 70) / 2));
+    ring.style.setProperty('--R', R + 'px');
+  }
+  function render(swap) {
+    var idx = mod(n, N);
+    ring.style.setProperty('--spin', (-n * STEP) + 'deg');
+    beads.forEach(function (b, i) {
+      var d = mod((i - n) * STEP + 180, 360) - 180, f = Math.cos(d * Math.PI / 180);
+      b.style.opacity = (0.28 + 0.72 * (f + 1) / 2).toFixed(2);
+      b.classList.toggle('back', f < 0.15);
+      b.classList.toggle('on', i === idx);
+    });
+    var w = WISHES[idx];
+    document.getElementById('wishCount').textContent = 'Wish ' + (idx + 1) + ' of ' + N;
+    document.getElementById('wishHi').textContent = w.hi;
+    document.getElementById('wishEn').textContent = w.en;
+    document.getElementById('wishText').textContent = w.t;
+    if (swap && !reduce) { wBody.classList.remove('swap'); void wBody.offsetWidth; wBody.classList.add('swap'); }
+  }
+  function goTo(i) {
+    var diff = mod(i - mod(n, N) + 7, N) - 7;
+    n += diff; render(true);
+  }
+  document.getElementById('next').addEventListener('click', function () { n++; lastTouch = Date.now(); render(true); });
+  document.getElementById('prev').addEventListener('click', function () { n--; lastTouch = Date.now(); render(true); });
+  scene.addEventListener('pointerenter', function () { hoverPause = true; });
+  scene.addEventListener('pointerleave', function () { hoverPause = false; });
+  window.addEventListener('resize', setRadius);
+  setRadius(); render(false);
+  if (!reduce) {
+    setInterval(function () {
+      if (document.hidden || hoverPause || Date.now() - lastTouch < 12000) return;
+      n++; render(true);
+    }, 6000);
+  }
+
+  /* ---------- lock gate ---------- */
+  var PASS = '0910', entered = '';
+  var lockEl = document.getElementById('lock'), lockCard = document.getElementById('lockCard');
+  var lockMsg = document.getElementById('lockMsg'), pageEl = document.getElementById('page');
+  var dots = Array.prototype.slice.call(document.querySelectorAll('#pinDots i'));
+  function paintDots() { dots.forEach(function (d, i) { d.classList.toggle('on', i < entered.length); }); }
+  function openGate(instant) {
+    pageEl.removeAttribute('inert'); pageEl.removeAttribute('aria-hidden');
+    document.documentElement.classList.remove('locked');
+    try { sessionStorage.setItem('aayush-unlocked', '1'); } catch (e) {}
+    if (instant) { lockEl.hidden = true; return; }
+    lockEl.classList.add('open');
+    window.scrollTo(0, 0);
+    setTimeout(function () { lockEl.hidden = true; }, 900);
+  }
+  function submitPin() {
+    if (entered === PASS) {
+      lockMsg.textContent = 'Har Har Mahadev! The gate is open.';
+      setTimeout(function () { openGate(false); }, 350);
+      return;
+    }
+    lockMsg.textContent = 'Wrong passcode. Try again.';
+    lockCard.classList.remove('shake'); void lockCard.offsetWidth; lockCard.classList.add('shake');
+    setTimeout(function () { entered = ''; paintDots(); }, 450);
+  }
+  function press(k) {
+    if (entered.length >= 4 || lockEl.hidden) return;
+    entered += k; paintDots();
+    if (entered.length === 4) setTimeout(submitPin, 120);
+  }
+  function backspace() { if (entered.length < 4) { entered = entered.slice(0, -1); paintDots(); } }
+  lockEl.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.key') : null;
+    if (!b) return;
+    if (b.getAttribute('data-k')) press(b.getAttribute('data-k'));
+    else if (b.getAttribute('data-act') === 'back') backspace();
+    else if (entered.length < 4) { entered = ''; paintDots(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (lockEl.hidden || lockEl.classList.contains('open')) return;
+    if (/^[0-9]$/.test(e.key)) press(e.key);
+    else if (e.key === 'Backspace') backspace();
+  });
+  var already = false;
+  try { already = sessionStorage.getItem('aayush-unlocked') === '1'; } catch (e) {}
+  if (already) openGate(true); else document.documentElement.classList.add('locked');
+
+  /* ---------- third eye ---------- */
+  var MSGS = [
+    'Aayush, that is 15 years of you. Mahadev smiles at good hearts. Keep yours that way.',
+    'Fear nothing this year. The one who drank the poison to save the world is on your side.',
+    'Stay calm like the Ganga on his head, and keep moving like her too.',
+    'Dance a little every day. Even Mahadev did the Tandav.',
+    'Work hard, sleep well and eat the good food. Rest is part of the plan.'
+  ];
+  var eyeSvg = document.getElementById('eyeSvg'), eyeBtn = document.getElementById('eyeBtn'), eyeMsg = document.getElementById('eyeMsg');
+  var mi = 0;
+  eyeBtn.addEventListener('click', function () {
+    eyeSvg.classList.add('open');
+    eyeSvg.setAttribute('aria-label', "Shiva's third eye, open");
+    eyeMsg.textContent = MSGS[mi % MSGS.length]; mi++;
+    eyeBtn.textContent = 'Another blessing';
+    var r = eyeSvg.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height * 0.58);
+  });
+
+  /* ---------- damru ---------- */
+  var ac = null, damruBtn = document.getElementById('damruBtn');
+  damruBtn.addEventListener('click', function () {
+    try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+    if (ac.state === 'suspended') ac.resume();
+    var t0 = ac.currentTime + 0.02;
+    [0, 0.16, 0.30, 0.42, 0.52, 0.60, 0.67, 0.73, 0.78, 0.82, 0.85].forEach(function (t, k) {
+      var o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(k % 2 ? 150 : 210, t0 + t);
+      o.frequency.exponentialRampToValueAtTime(90, t0 + t + 0.12);
+      g.gain.setValueAtTime(0.0001, t0 + t);
+      g.gain.exponentialRampToValueAtTime(0.5, t0 + t + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + t + 0.18);
+      o.connect(g); g.connect(ac.destination);
+      o.start(t0 + t); o.stop(t0 + t + 0.2);
+    });
+    damruBtn.classList.remove('ringing'); void damruBtn.offsetWidth; damruBtn.classList.add('ringing');
+  });
+})();
+</script>
+
+</body></html>
