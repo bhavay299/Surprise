@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Aayush's Mahadev Birthday</title>
+<title>Aayush's Countdown</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Marcellus&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -14,6 +14,11 @@
   --eye: #ff7b3d;
   --muted: #92a0bf;
   --glass-edge: rgba(190, 210, 255, 0.22);
+  --plain-bg: #0b0b0d;
+  --plain-glow: #202025;
+  --plain-fg: #f1f1f3;
+  --plain-dim: #8c8c95;
+  --plain-line: rgba(255, 255, 255, 0.16);
   --font-display: 'Yatra One', 'Marcellus', Georgia, serif;
   --font-head: 'Marcellus', Georgia, serif;
   --font-body: 'Hind', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -167,40 +172,97 @@ h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.5rem
 .foot .hh { font-family: var(--font-display); font-size: 1.7rem; color: var(--moon); margin: 0; }
 .foot p { margin: 0; color: var(--muted); }
 
-/* lock gate */
+/* lock gate (plain on purpose: no theme shows until the page opens) */
 html.locked { overflow: hidden; }
 .lock {
   position: fixed; inset: 0; z-index: 50; display: flex; overflow-y: auto;
   padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
-  background:
-    radial-gradient(ellipse 80% 45% at 50% 100%, rgba(98, 203, 230, 0.26), transparent 70%),
-    radial-gradient(ellipse 50% 40% at 80% 8%, rgba(243, 236, 214, 0.1), transparent 70%),
-    linear-gradient(180deg, #050912, #0a1530 68%, #12284a);
+  background: radial-gradient(ellipse 75% 55% at 50% 38%, var(--plain-glow), var(--plain-bg) 72%);
+  color: var(--plain-fg);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 .lock.open { opacity: 0; transform: scale(1.08); pointer-events: none; }
-.lock-card { width: min(100%, 400px); margin: auto; padding: 24px 20px 22px; text-align: center; display: grid; gap: 12px; }
-.lock-card .eyebrow { margin: 0; }
-.lock-card h2 { font-size: clamp(1.7rem, 8vw, 2.3rem); }
-.lock-sub { margin: 0; color: var(--muted); font-size: 0.95rem; }
-.lock .cd-num { font-size: clamp(1.5rem, 8vw, 2.1rem); }
-.lock .cd-cell { padding: 10px 2px 8px; }
-.lock-note { margin: 0; font-family: var(--font-display); color: var(--eye); font-size: 1.15rem; }
-.lock-note:empty { display: none; }
-.pin { display: flex; justify-content: center; gap: 14px; padding-top: 4px; }
-.pin i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ash); transition: background 0.15s, box-shadow 0.15s; }
-.pin i.on { background: var(--eye); border-color: var(--eye); box-shadow: 0 0 12px var(--eye); }
-.lock-msg { margin: 0; min-height: 1.5em; font-size: 0.95rem; color: var(--ash); }
+.lock-inner { width: min(100%, 520px); margin: auto; padding: 8px 0; text-align: center; display: grid; gap: 28px; justify-items: center; }
+.plain-tag { margin: 0; font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--plain-dim); }
+.plain-cd { width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.plain-cell { min-width: 0; display: grid; gap: 8px; }
+.plain-num { font-size: clamp(2.3rem, 12vw, 4.6rem); font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; }
+.plain-unit { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--plain-dim); }
+.keypane { width: 100%; max-width: 300px; display: grid; gap: 14px; }
+.pin { display: flex; justify-content: center; gap: 14px; }
+.pin i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--plain-dim); transition: background 0.15s; }
+.pin i.on { background: var(--plain-fg); border-color: var(--plain-fg); }
+.lock-msg { margin: 0; min-height: 1.5em; font-size: 0.95rem; color: var(--plain-dim); }
 .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.key {
-  height: 50px; border-radius: 14px; border: 1px solid var(--glass-edge); background: rgba(190, 210, 255, 0.08);
-  font-family: var(--font-head); font-size: 1.4rem; color: var(--moon); transition: background 0.15s, transform 0.1s;
-}
-.key.sm { font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-.key:hover { background: rgba(190, 210, 255, 0.18); }
+.key { height: 52px; border-radius: 14px; border: 1px solid var(--plain-line); background: rgba(255, 255, 255, 0.05); font-size: 1.4rem; color: var(--plain-fg); transition: background 0.15s, transform 0.1s; }
+.key.sm { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--plain-dim); }
+.key:hover { background: rgba(255, 255, 255, 0.12); }
 .key:active { transform: scale(0.95); }
-.lock-card.shake { animation: lockshake 0.45s ease; }
+.lock-inner.shake { animation: lockshake 0.45s ease; }
 @keyframes lockshake { 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+
+/* names of Mahadev */
+.lead { margin: 0; color: var(--muted); }
+.names { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; perspective: 900px; }
+.name-card { position: relative; height: 128px; padding: 0; border: 0; background: none; text-align: center; }
+.nc-in { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.name-card.flipped .nc-in { transform: rotateY(180deg); }
+@media (hover: hover) { .name-card:hover .nc-in { transform: rotateY(180deg); } }
+.nc-face { position: absolute; inset: 0; display: grid; place-content: center; gap: 4px; padding: 10px; border-radius: 16px; border: 1px solid var(--glass-edge); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.nc-front { background: linear-gradient(160deg, rgba(190, 210, 255, 0.14), rgba(190, 210, 255, 0.05)); box-shadow: 0 18px 30px -18px rgba(0, 0, 0, 0.7); }
+.nc-back { background: linear-gradient(160deg, rgba(255, 123, 61, 0.24), rgba(255, 123, 61, 0.08)); transform: rotateY(180deg); font-size: 0.92rem; line-height: 1.35; }
+.nc-hi { font-family: var(--font-display); font-size: 1.45rem; line-height: 1.2; color: var(--moon); }
+.nc-en { font-family: var(--font-head); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ganga); }
+
+/* diyas */
+.diya-panel { display: grid; gap: 14px; }
+.diyas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px 6px; justify-items: center; max-width: 460px; width: 100%; margin: 6px auto 0; }
+.diya { position: relative; width: 100%; max-width: 64px; height: 70px; border: 0; background: none; padding: 0; }
+.diya .bowl { position: absolute; left: 50%; bottom: 6px; width: 46px; height: 24px; margin-left: -23px; border-radius: 4px 4px 24px 24px; background: linear-gradient(180deg, #d99a5a, #7a4520); box-shadow: inset 0 3px 4px rgba(0, 0, 0, 0.35), 0 6px 10px rgba(0, 0, 0, 0.4); }
+.diya .bowl::before { content: ""; position: absolute; left: 50%; top: -7px; width: 2px; height: 8px; margin-left: -1px; background: #2b1408; }
+.diya .flame { position: absolute; left: 50%; top: 8px; width: 14px; height: 24px; margin-left: -7px; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; background: linear-gradient(180deg, #fff2b0, #ffb347 55%, var(--eye)); box-shadow: 0 0 18px 6px rgba(255, 150, 60, 0.5); opacity: 0; transform: scale(0.2); transform-origin: 50% 100%; transition: opacity 0.3s, transform 0.4s; }
+.diya.lit .flame { opacity: 1; transform: scale(1); animation: flicker 1.6s ease-in-out infinite; }
+@keyframes flicker { 50% { transform: scale(1.08, 0.94) rotate(2deg); } }
+.diya-count { margin: 0; text-align: center; font-family: var(--font-head); letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.85rem; color: var(--ganga); font-variant-numeric: tabular-nums; }
+.diya-note { margin: 0; text-align: center; font-size: 1.05rem; min-height: 3em; }
+.diya-panel .btns { justify-content: center; }
+
+/* japa counter */
+.japa { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; align-items: center; }
+.japa > * { min-width: 0; }
+.jp-ring { position: relative; width: min(100%, 240px); aspect-ratio: 1; margin: 0 auto; }
+.jp-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.jp-ring circle { fill: none; stroke-width: 6; }
+.jp-track { stroke: rgba(190, 210, 255, 0.18); }
+.jp-bar { stroke: var(--eye); stroke-linecap: round; transition: stroke-dashoffset 0.25s ease; }
+.jp-tap { position: absolute; inset: 14%; border-radius: 50%; border: 1px solid var(--glass-edge); background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.18), rgba(190, 210, 255, 0.06)); font-family: var(--font-display); font-size: 3.6rem; color: var(--moon); text-shadow: 0 0 20px var(--ganga); box-shadow: 0 18px 30px -14px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2); transition: transform 0.12s; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.jp-tap:active { transform: scale(0.94); }
+.jp-count { margin: 4px 0 0; font-family: var(--font-head); font-size: clamp(2.4rem, 8vw, 3.6rem); line-height: 1; color: var(--moon); font-variant-numeric: tabular-nums; }
+.jp-of { font-size: 0.45em; color: var(--muted); }
+.jp-note { margin: 10px 0 0; max-width: 36ch; }
+.jp-rounds { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+
+/* letter */
+.letter { padding: clamp(22px, 4vw, 40px); display: grid; gap: 14px; max-width: 720px; margin: 0 auto; width: 100%; }
+.letter p { margin: 0; font-size: 1.08rem; max-width: 60ch; }
+.letter .label { font-size: 0.78rem; }
+.letter .sign { font-family: var(--font-display); font-size: 1.5rem; color: var(--moon); }
+
+/* secret admin access */
+.secret {
+  position: absolute; right: max(10px, env(safe-area-inset-right, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px));
+  width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; padding: 0; opacity: 0.07; transition: opacity 0.2s;
+}
+.secret::after { content: ""; display: block; width: 8px; height: 8px; margin: auto; border-radius: 50%; background: var(--ash); }
+.secret:hover, .secret:focus-visible { opacity: 0.5; }
+.admin { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding: 16px; background: rgba(4, 7, 14, 0.78); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); overflow-y: auto; }
+.admin-card { width: min(100%, 360px); padding: 22px 20px; display: grid; gap: 12px; }
+.admin-card h3 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; color: var(--moon); }
+.admin-tag { margin: 0; font-family: var(--font-head); font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--eye); }
+.admin-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: rgba(6, 10, 21, 0.5); border: 1px solid rgba(190, 210, 255, 0.14); font-size: 0.95rem; }
+.admin-row span:first-child { color: var(--muted); }
+.admin-code { font-family: var(--font-head); font-size: 1.5rem; letter-spacing: 0.3em; color: var(--moon); font-variant-numeric: tabular-nums; }
+.admin-btns { display: flex; flex-wrap: wrap; gap: 10px; }
 
 @media (max-width: 520px) {
   .stage { height: 540px; }
@@ -216,32 +278,50 @@ html.locked { overflow: hidden; }
 <canvas id="sky" aria-hidden="true"></canvas>
 
 <div class="lock" id="lock" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
-  <div class="glass lock-card" id="lockCard">
-    <p class="eyebrow">ॐ नमः शिवाय</p>
-    <h2 id="lockTitle">The gate is locked</h2>
-    <p class="lock-sub">Aayush's birthday page opens with a 4-digit passcode. Until his big day, this is the time left.</p>
-    <div class="cd-grid" id="lkGrid">
-      <div class="cd-cell"><span class="cd-num" id="lkD">--</span><span class="cd-unit">Days</span></div>
-      <div class="cd-cell"><span class="cd-num" id="lkH">--</span><span class="cd-unit">Hours</span></div>
-      <div class="cd-cell"><span class="cd-num" id="lkM">--</span><span class="cd-unit">Minutes</span></div>
-      <div class="cd-cell"><span class="cd-num" id="lkS">--</span><span class="cd-unit">Seconds</span></div>
+  <div class="lock-inner" id="lockCard">
+    <p class="plain-tag" id="lockTitle">Aayush · 27 November</p>
+    <div class="plain-cd" id="lkGrid">
+      <div class="plain-cell"><span class="plain-num" id="lkD">--</span><span class="plain-unit">Days</span></div>
+      <div class="plain-cell"><span class="plain-num" id="lkH">--</span><span class="plain-unit">Hours</span></div>
+      <div class="plain-cell"><span class="plain-num" id="lkM">--</span><span class="plain-unit">Minutes</span></div>
+      <div class="plain-cell"><span class="plain-num" id="lkS">--</span><span class="plain-unit">Seconds</span></div>
     </div>
-    <p class="lock-note" id="lkNote"></p>
-    <div class="pin" id="pinDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <p class="lock-msg" id="lockMsg" role="status">Enter the passcode</p>
-    <div class="keypad">
-      <button class="key" type="button" data-k="1">1</button>
-      <button class="key" type="button" data-k="2">2</button>
-      <button class="key" type="button" data-k="3">3</button>
-      <button class="key" type="button" data-k="4">4</button>
-      <button class="key" type="button" data-k="5">5</button>
-      <button class="key" type="button" data-k="6">6</button>
-      <button class="key" type="button" data-k="7">7</button>
-      <button class="key" type="button" data-k="8">8</button>
-      <button class="key" type="button" data-k="9">9</button>
-      <button class="key sm" type="button" data-act="clear">Clear</button>
-      <button class="key" type="button" data-k="0">0</button>
-      <button class="key sm" type="button" data-act="back" aria-label="Delete last digit">Del</button>
+    <div class="keypane" id="keyPane" hidden>
+      <div class="pin" id="pinDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <p class="lock-msg" id="lockMsg" role="status">Enter the passcode</p>
+      <div class="keypad">
+        <button class="key" type="button" data-k="1">1</button>
+        <button class="key" type="button" data-k="2">2</button>
+        <button class="key" type="button" data-k="3">3</button>
+        <button class="key" type="button" data-k="4">4</button>
+        <button class="key" type="button" data-k="5">5</button>
+        <button class="key" type="button" data-k="6">6</button>
+        <button class="key" type="button" data-k="7">7</button>
+        <button class="key" type="button" data-k="8">8</button>
+        <button class="key" type="button" data-k="9">9</button>
+        <button class="key sm" type="button" data-act="clear">Clear</button>
+        <button class="key" type="button" data-k="0">0</button>
+        <button class="key sm" type="button" data-act="back" aria-label="Delete last digit">Del</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="secret" id="secretBtn" type="button" aria-label="Admin access"></button>
+
+  <div class="admin" id="admin" hidden>
+    <div class="glass admin-card" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+      <p class="admin-tag">Restricted</p>
+      <h3 id="adminTitle">Admin panel</h3>
+      <div class="admin-row"><span>Gate status</span><span id="admStatus">Countdown running</span></div>
+      <div class="admin-row"><span>Passcode screen opens</span><span>27 Nov, 12:00 am IST</span></div>
+      <div class="admin-row"><span>Wrong attempts</span><span id="admTries">0</span></div>
+      <div class="admin-row"><span>Passcode</span><span class="admin-code" id="admCode" aria-live="polite">••••</span></div>
+      <div class="admin-btns">
+        <button class="btn" id="admReveal" type="button">Show passcode</button>
+        <button class="btn" id="admTest" type="button">Test passcode screen</button>
+        <button class="btn primary" id="admUnlock" type="button">Unlock page</button>
+        <button class="btn" id="admClose" type="button">Close</button>
+      </div>
     </div>
   </div>
 </div>
@@ -368,6 +448,56 @@ html.locked { overflow: hidden; }
     </div>
   </section>
 
+  <section aria-label="Fifteen names of Mahadev">
+    <div class="section-head" style="margin-bottom:14px">
+      <p class="label">15 names, 15 years</p>
+      <h2>Names of Mahadev</h2>
+      <p class="lead">Tap a card to turn it over and read what the name means.</p>
+    </div>
+    <div class="names" id="names"></div>
+  </section>
+
+  <section class="glass panel diya-panel" data-tilt aria-label="Light fifteen diyas">
+    <div class="section-head">
+      <p class="label">Make a wish</p>
+      <h2>Light fifteen diyas</h2>
+    </div>
+    <div class="diyas" id="diyas"></div>
+    <p class="diya-count" id="diyaCount">0 of 15 lit</p>
+    <p class="diya-note" id="diyaNote" aria-live="polite">Tap a diya to light it. Light all 15, one for each year.</p>
+    <div class="btns">
+      <button class="btn primary" id="diyaAll" type="button">Light all 15</button>
+      <button class="btn" id="diyaReset" type="button">Start again</button>
+    </div>
+  </section>
+
+  <section class="glass panel japa" data-tilt aria-label="Om Namah Shivaya counter">
+    <div class="jp-ring">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="jp-track" cx="60" cy="60" r="52"/>
+        <circle class="jp-bar" id="jpBar" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+      </svg>
+      <button class="jp-tap" id="jpTap" type="button" aria-label="Chant once">ॐ</button>
+    </div>
+    <div>
+      <p class="label">Japa</p>
+      <h2>Om Namah Shivaya</h2>
+      <p class="jp-count"><span id="jpNum">0</span><span class="jp-of"> / 108</span></p>
+      <p class="jp-note" id="jpNote" aria-live="polite">Tap Om once for every chant. A full mala has 108 beads.</p>
+      <p class="jp-rounds" id="jpRounds">Rounds completed: 0</p>
+    </div>
+  </section>
+
+  <section class="glass panel letter" data-tilt aria-label="A note for Aayush">
+    <p class="label">For Aayush</p>
+    <h2>A note from your friend</h2>
+    <p>Dear Aayush,</p>
+    <p>Fifteen is a good number. You are old enough to make your own choices and still young enough to keep a lot of the fun. Hold on to both.</p>
+    <p>I hope this year gives you good marks, good food, good people and plenty of time to do what you like. I hope the bad days are short and the good days are very loud.</p>
+    <p>Whatever happens, I am around. Have a great birthday, and eat some cake for me.</p>
+    <p class="sign">Your friend</p>
+  </section>
+
   <footer class="foot">
     <p class="hh">हर हर महादेव</p>
     <p>Made for Aayush, 27 November. From your friend, with love.</p>
@@ -468,9 +598,9 @@ html.locked { overflow: hidden; }
   /* ---------- countdown (IST) ---------- */
   var target = new Date('2026-11-27T00:00:00+05:30').getTime(), DAY = 864e5;
   var cdGrid = document.getElementById('cdGrid'), cdMsg = document.getElementById('cdMsg'), cdTitle = document.getElementById('cdTitle');
+  var lkGrid = document.getElementById('lkGrid');
   var el = { d: document.getElementById('cdD'), h: document.getElementById('cdH'), m: document.getElementById('cdM'), s: document.getElementById('cdS') };
   var lk = { d: document.getElementById('lkD'), h: document.getElementById('lkH'), m: document.getElementById('lkM'), s: document.getElementById('lkS') };
-  var lkGrid = document.getElementById('lkGrid'), lkNote = document.getElementById('lkNote');
   function pad(n) { return String(n).padStart(2, '0'); }
   function tickCountdown() {
     var now = Date.now(), diff = target - now;
@@ -484,11 +614,9 @@ html.locked { overflow: hidden; }
     } else if (now < target + DAY) {
       cdGrid.hidden = true; cdMsg.hidden = false; cdTitle.textContent = 'Today is the day';
       cdMsg.textContent = 'Happy birthday, Aayush! You are 15 today.';
-      lkGrid.hidden = true; lkNote.textContent = "Today is Aayush's birthday!";
     } else {
       cdGrid.hidden = true; cdMsg.hidden = false; cdTitle.textContent = 'Aayush turned 15';
       cdMsg.textContent = 'It happened on 27 November. Har Har Mahadev!';
-      lkGrid.hidden = true; lkNote.textContent = 'Aayush turned 15 on 27 November.';
     }
   }
   tickCountdown(); setInterval(tickCountdown, 1000);
@@ -563,15 +691,25 @@ html.locked { overflow: hidden; }
   }
 
   /* ---------- lock gate ---------- */
-  var PASS = '0910', entered = '';
+  var PASS = '0910', entered = '', tries = 0, forceKeys = false, taps = [];
   var lockEl = document.getElementById('lock'), lockCard = document.getElementById('lockCard');
-  var lockMsg = document.getElementById('lockMsg'), pageEl = document.getElementById('page');
+  var lockMsg = document.getElementById('lockMsg'), lockTag = document.getElementById('lockTitle');
+  var keyPane = document.getElementById('keyPane'), pageEl = document.getElementById('page');
+  var adminEl = document.getElementById('admin'), admCode = document.getElementById('admCode');
+  var admReveal = document.getElementById('admReveal'), admTest = document.getElementById('admTest');
   var dots = Array.prototype.slice.call(document.querySelectorAll('#pinDots i'));
+  function countdownDone() { return Date.now() >= target; }
+  function syncLock() {
+    if (lockEl.hidden) return;
+    var k = countdownDone() || forceKeys;
+    keyPane.hidden = !k; lkGrid.hidden = k;
+    lockTag.textContent = k ? 'Aayush' : 'Aayush · 27 November';
+  }
   function paintDots() { dots.forEach(function (d, i) { d.classList.toggle('on', i < entered.length); }); }
-  function openGate(instant) {
+  function openGate(instant, persist) {
     pageEl.removeAttribute('inert'); pageEl.removeAttribute('aria-hidden');
     document.documentElement.classList.remove('locked');
-    try { sessionStorage.setItem('aayush-unlocked', '1'); } catch (e) {}
+    if (persist) { try { sessionStorage.setItem('aayush-open-v2', '1'); } catch (e) {} }
     if (instant) { lockEl.hidden = true; return; }
     lockEl.classList.add('open');
     window.scrollTo(0, 0);
@@ -579,16 +717,17 @@ html.locked { overflow: hidden; }
   }
   function submitPin() {
     if (entered === PASS) {
-      lockMsg.textContent = 'Har Har Mahadev! The gate is open.';
-      setTimeout(function () { openGate(false); }, 350);
+      lockMsg.textContent = 'Correct. Opening.';
+      setTimeout(function () { openGate(false, true); }, 350);
       return;
     }
+    tries++; document.getElementById('admTries').textContent = tries;
     lockMsg.textContent = 'Wrong passcode. Try again.';
     lockCard.classList.remove('shake'); void lockCard.offsetWidth; lockCard.classList.add('shake');
     setTimeout(function () { entered = ''; paintDots(); }, 450);
   }
   function press(k) {
-    if (entered.length >= 4 || lockEl.hidden) return;
+    if (entered.length >= 4 || lockEl.hidden || keyPane.hidden) return;
     entered += k; paintDots();
     if (entered.length === 4) setTimeout(submitPin, 120);
   }
@@ -601,13 +740,128 @@ html.locked { overflow: hidden; }
     else if (entered.length < 4) { entered = ''; paintDots(); }
   });
   document.addEventListener('keydown', function (e) {
-    if (lockEl.hidden || lockEl.classList.contains('open')) return;
+    if (e.key === 'Escape' && !adminEl.hidden) { closeAdmin(); return; }
+    if (lockEl.hidden || lockEl.classList.contains('open') || !adminEl.hidden) return;
     if (/^[0-9]$/.test(e.key)) press(e.key);
     else if (e.key === 'Backspace') backspace();
   });
+
+  /* secret admin access: tap the faint dot in the corner 5 times within 3 seconds.
+     It is the only way past the countdown screen before the date. */
+  function setReveal(show) {
+    admCode.textContent = show ? PASS : '••••';
+    admReveal.textContent = show ? 'Hide passcode' : 'Show passcode';
+  }
+  function openAdmin() {
+    setReveal(false);
+    document.getElementById('admStatus').textContent = countdownDone() ? 'Passcode screen is live' : 'Countdown running';
+    admTest.hidden = countdownDone();
+    admTest.textContent = forceKeys ? 'Back to countdown' : 'Test passcode screen';
+    adminEl.hidden = false; document.getElementById('admClose').focus();
+  }
+  function closeAdmin() { adminEl.hidden = true; setReveal(false); }
+  document.getElementById('secretBtn').addEventListener('click', function () {
+    var now = Date.now();
+    taps = taps.filter(function (t) { return now - t < 3000; }); taps.push(now);
+    if (taps.length >= 5) { taps = []; openAdmin(); }
+  });
+  admReveal.addEventListener('click', function () { setReveal(admCode.textContent === '••••'); });
+  admTest.addEventListener('click', function () {
+    forceKeys = !forceKeys; entered = ''; paintDots();
+    lockMsg.textContent = 'Enter the passcode';
+    syncLock(); closeAdmin();
+  });
+  document.getElementById('admClose').addEventListener('click', closeAdmin);
+  document.getElementById('admUnlock').addEventListener('click', function () { closeAdmin(); openGate(false, false); });
+
   var already = false;
-  try { already = sessionStorage.getItem('aayush-unlocked') === '1'; } catch (e) {}
-  if (already) openGate(true); else document.documentElement.classList.add('locked');
+  try { already = sessionStorage.getItem('aayush-open-v2') === '1'; } catch (e) {}
+  if (already && countdownDone()) openGate(true, false);
+  else document.documentElement.classList.add('locked');
+  syncLock(); setInterval(syncLock, 1000);
+
+  /* ---------- names of Mahadev ---------- */
+  var NAMES = [
+    ['महादेव', 'Mahadev', 'The great god'],
+    ['भोलेनाथ', 'Bholenath', 'The simple-hearted lord'],
+    ['नीलकंठ', 'Neelkanth', 'Blue-throated, he drank the poison'],
+    ['नटराज', 'Nataraja', 'Lord of the cosmic dance'],
+    ['गंगाधर', 'Gangadhar', 'He who carries the Ganga'],
+    ['चंद्रशेखर', 'Chandrashekhar', 'He who wears the moon'],
+    ['पशुपति', 'Pashupati', 'Lord of all living beings'],
+    ['महाकाल', 'Mahakal', 'Master of time'],
+    ['रुद्र', 'Rudra', 'The roarer who removes sorrow'],
+    ['शंकर', 'Shankar', 'The giver of peace'],
+    ['कैलाशपति', 'Kailashpati', 'Lord of Mount Kailash'],
+    ['त्रिपुरारी', 'Tripurari', 'Destroyer of the three cities'],
+    ['अर्धनारीश्वर', 'Ardhanarishvara', 'Half Shiva, half Shakti'],
+    ['उमापति', 'Umapati', 'Husband of Uma, also called Parvati'],
+    ['आदियोगी', 'Adiyogi', 'The first yogi']
+  ];
+  var namesEl = document.getElementById('names');
+  NAMES.forEach(function (nm) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'name-card';
+    b.setAttribute('aria-label', nm[1] + ': ' + nm[2]);
+    b.innerHTML = '<span class="nc-in"><span class="nc-face nc-front"><span class="nc-hi">' + nm[0] + '</span><span class="nc-en">' + nm[1] + '</span></span><span class="nc-face nc-back">' + nm[2] + '</span></span>';
+    b.addEventListener('click', function () { b.classList.toggle('flipped'); });
+    namesEl.appendChild(b);
+  });
+
+  /* ---------- diyas ---------- */
+  var diyaWrap = document.getElementById('diyas'), diyaCount = document.getElementById('diyaCount'), diyaNote = document.getElementById('diyaNote');
+  var diyaEls = [], diyaTimers = [];
+  function setLit(d, on) { d.classList.toggle('lit', on); d.setAttribute('aria-pressed', on ? 'true' : 'false'); }
+  function diyaUpdate() {
+    var c = diyaEls.filter(function (d) { return d.classList.contains('lit'); }).length;
+    diyaCount.textContent = c + ' of 15 lit';
+    if (c === 15) {
+      diyaNote.textContent = 'All 15 are lit. Close your eyes and make a wish, Aayush.';
+      var r = diyaWrap.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2);
+    } else if (c === 0) diyaNote.textContent = 'Tap a diya to light it. Light all 15, one for each year.';
+    else diyaNote.textContent = 'Keep going. ' + (15 - c) + ' more to light.';
+  }
+  for (var di = 0; di < 15; di++) {
+    (function (idx) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'diya'; b.setAttribute('aria-pressed', 'false');
+      b.setAttribute('aria-label', 'Diya ' + (idx + 1));
+      b.innerHTML = '<span class="flame"></span><span class="bowl"></span>';
+      b.addEventListener('click', function () { setLit(b, !b.classList.contains('lit')); diyaUpdate(); });
+      diyaWrap.appendChild(b); diyaEls.push(b);
+    })(di);
+  }
+  function clearDiyaTimers() { diyaTimers.forEach(clearTimeout); diyaTimers = []; }
+  document.getElementById('diyaAll').addEventListener('click', function () {
+    clearDiyaTimers();
+    var delay = 0;
+    diyaEls.forEach(function (d) {
+      if (d.classList.contains('lit')) return;
+      diyaTimers.push(setTimeout(function () { setLit(d, true); diyaUpdate(); }, delay));
+      delay += reduce ? 0 : 140;
+    });
+  });
+  document.getElementById('diyaReset').addEventListener('click', function () {
+    clearDiyaTimers(); diyaEls.forEach(function (d) { setLit(d, false); }); diyaUpdate();
+  });
+
+  /* ---------- japa counter ---------- */
+  var JP_MAX = 108, JP_C = 326.73, jpCount = 0, jpRounds = 0;
+  var jpBar = document.getElementById('jpBar'), jpNum = document.getElementById('jpNum'), jpNote = document.getElementById('jpNote'), jpRoundsEl = document.getElementById('jpRounds');
+  document.getElementById('jpTap').addEventListener('click', function () {
+    if (jpCount >= JP_MAX) jpCount = 0;
+    jpCount++;
+    jpNum.textContent = jpCount;
+    jpBar.style.strokeDashoffset = (JP_C * (1 - jpCount / JP_MAX)).toFixed(2);
+    if (jpCount === JP_MAX) {
+      jpRounds++;
+      jpRoundsEl.textContent = 'Rounds completed: ' + jpRounds;
+      jpNote.textContent = 'Mala complete. Mahadev heard you. Tap Om to begin another round.';
+      var r = document.getElementById('jpTap').getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2);
+    } else if (jpCount === 1) {
+      jpNote.textContent = 'Keep going. Take your time.';
+    }
+  });
 
   /* ---------- third eye ---------- */
   var MSGS = [
